@@ -8,7 +8,6 @@
 import Fluent
 import Vapor
 
-
 final class Daily: Model, Content {
     static let schema: String = daily
     init() {}
@@ -21,7 +20,5 @@ final class Daily: Model, Content {
     init(id: Int? = nil, instructions: String) {
         self.id = id
         self.instructions = instructions
-        
     }
-    
 }

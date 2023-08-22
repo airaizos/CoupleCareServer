@@ -7,10 +7,10 @@
 
 import Foundation
 
-
 let category = "category"
 let activity = "activity"
 let activityTag = "activityTag"
 let tag = "tag"
 let daily = "daily"
 let dailyTag = "dailyTag"
+let dataSourceVersion = "dataSourceVerson"
