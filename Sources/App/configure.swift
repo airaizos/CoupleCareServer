@@ -11,7 +11,13 @@ public func configure(_ app: Application) async throws {
    
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file("couplecaredb.sqlite")), as: .sqlite)
 
-    app.migrations.add(CreateTodo())
+    app.migrations.add(CreateCategory())
+    app.migrations.add(CreateTag())
+    app.migrations.add(CreateActivity())
+    app.migrations.add(CreateActivityTag())
+    app.migrations.add(CreateDaily())
+    app.migrations.add(CreateDailyTag())
+    app.migrations.add(CreateDataSourceVersion())
 
     app.views.use(.leaf)
 

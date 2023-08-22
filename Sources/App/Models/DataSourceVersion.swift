@@ -11,7 +11,7 @@ import Vapor
 final class DataSourceVersion: Model, Content {
     static let schema: String = dataSourceVersion
     @ID(custom: .id) var id: Int?
-    @Field(key: "current") var current: Double
+    @Field(key: "current") var current: Double?
     
     init() { }
     
