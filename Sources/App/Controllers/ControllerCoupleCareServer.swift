@@ -22,10 +22,11 @@ struct ControllerCoupleCareServer: RouteCollection {
         api.get("dailies", use: getDailies)
         api.get("dailiesdetail", use: getDailiesDetail)
         api.get("dailytags", use: getDailyTags)
+        api.get("quotes", use: getQuotes)
         
     }
     
-    //MARK: - TYPES
+    //MARK: - General
     func currentVersion(req:Request) async throws -> Double {
         if let max = try await DataSourceVersion
             .query(on: req.db)
@@ -50,6 +51,14 @@ struct ControllerCoupleCareServer: RouteCollection {
             .all()
     }
     
+    func getQuotes(req:Request) async throws -> [Quote] {
+        try await Quote
+            .query(on: req.db)
+            .all()
+    }
+    
+    //MARK: - Activities
+    
     func getActivities(req:Request) async throws -> [Activity] {
         try await Activity
             .query(on: req.db)
@@ -73,6 +82,7 @@ struct ControllerCoupleCareServer: RouteCollection {
             .all()
     }
     
+    //MARK: Dailies
     
     func getDailies(req: Request) async throws -> [Daily] {
         try await Daily
