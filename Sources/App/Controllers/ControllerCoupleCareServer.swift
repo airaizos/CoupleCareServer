@@ -32,7 +32,7 @@ struct ControllerCoupleCareServer: RouteCollection {
             .max(\.$current) {
             return max
         } else {
-            throw Abort(.notFound, reason: "Current version not found")
+            throw Abort(.notFound, reason: "No se ha encontrado la versión actual")
         }
     }
     
