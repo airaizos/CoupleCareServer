@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 
-struct ControllerCoupleCareServer: RouteCollection {
+struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
     func boot(routes: RoutesBuilder) throws {
         let api = routes.grouped("couplecare")
         
