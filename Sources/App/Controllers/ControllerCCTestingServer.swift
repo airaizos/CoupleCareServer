@@ -26,7 +26,16 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         api.get("dailytags", use: getDailyTags)
         api.get("quotes", use: getQuotes)
         api.get("image", use:getImage)
-        
+        api.get("latestactivities",":id", use: getLatestActivities)
+        //http://127.0.0.1:8080/testing/latestactivities/1
+    }
+    
+    //MARK - Métodos Compartidos
+    func getContentFrom<T:Content>(file: String, type: T.Type) async throws -> T {
+        let path = URL(string: "http://127.0.0.1:8080/\(file)")!
+        let data = try Data(contentsOf: path, options: .alwaysMapped)
+        let content = try JSONDecoder().decode(type.self, from: data)
+        return content
     }
     
     //MARK: Testing GetURSL
@@ -76,12 +85,26 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
     }
     
     
-    func getContentFrom<T:Content>(file: String, type: T.Type) async throws -> T {
-        let path = URL(string: "http://127.0.0.1:8080/\(file)")!
-        let data = try Data(contentsOf: path, options: .alwaysMapped)
-        let content = try JSONDecoder().decode(type.self, from: data)
-        return content
+    //MARK: Registros filtrados
+    
+    func getLatestActivities(req: Vapor.Request) async throws -> [Activity] {
+     
+        guard let id = req.parameters.get("id", as: Int.self) else {
+            throw Abort(.badRequest)
+        }
+//        let activities =  try await getContentFrom(file: "Activities.json", type: [Activity].self)
+//      return activities.filter { ($0.id ?? 0) >= int }
+        
+        
+            return try await Activity
+            .query(on: req.db(DatabaseID.sqlite))
+            .filter(\.$id >= id)
+            .sort(\.$id)
+            .all()
+         
+        
     }
+   
     
   
     
