@@ -10,8 +10,8 @@ public func configure(_ app: Application) async throws {
      app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
    
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file("couplecaredb.sqlite")), as: .sqlite)
-
-    //Migrations
+    
+    //Migrations: 8
     app.migrations.add(CreateDataSourceVersion())
     app.migrations.add(CreateCategory())
     app.migrations.add(CreateTag())
@@ -24,8 +24,25 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateDailyTag())
     
 
+    //Testing Endpoint
+    app.databases.use(.sqlite(.file("testingDB.sqlite")), as: .testingDB)
+    
+    app.migrations.add(CreateDataSourceVersion(), to: .testingDB)
+    app.migrations.add(CreateCategory(), to: .testingDB)
+    app.migrations.add(CreateTag(), to: .testingDB)
+    app.migrations.add(CreateQuote(), to: .testingDB)
+    
+    app.migrations.add(CreateActivity(), to: .testingDB)
+    app.migrations.add(CreateActivityTag(), to: .testingDB)
+    
+    app.migrations.add(CreateDaily(), to: .testingDB)
+    app.migrations.add(CreateDailyTag(), to: .testingDB)
+    
     app.views.use(.leaf)
 
+    
+    
+    
     
 
     // register routes
