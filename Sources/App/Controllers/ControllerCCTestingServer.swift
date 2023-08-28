@@ -26,8 +26,11 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         api.get("dailytags", use: getDailyTags)
         api.get("quotes", use: getQuotes)
         api.get("image", use:getImage)
-        api.get("latestactivities",":id", use: getLatestActivities)
-        //http://127.0.0.1:8080/testing/latestactivities/1
+        
+        
+        let latest = api.grouped("latest")
+        latest.get("activities",":id", use: getLatestActivities)
+ 
     }
     
     //MARK - Métodos Compartidos
@@ -73,7 +76,7 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
     }
     
     func getDailiesDetail(req: Vapor.Request) async throws -> [Daily] {
-        try await getContentFrom(file: "Dailies.json", type: [Daily].self)
+        try await getContentFrom(file: "Dailiesdetail.json", type: [Daily].self)
     }
     
     func getDailyTags(req: Vapor.Request) async throws -> [DailyTag] {
@@ -92,15 +95,17 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         guard let id = req.parameters.get("id", as: Int.self) else {
             throw Abort(.badRequest)
         }
-//        let activities =  try await getContentFrom(file: "Activities.json", type: [Activity].self)
-//      return activities.filter { ($0.id ?? 0) >= int }
         
-        
+        if id < 0 {
+            let activities =  try await getContentFrom(file: "Activities.json", type: [Activity].self)
+            return activities.filter { ($0.id ?? 0) >= id }
+        } else {
             return try await Activity
-            .query(on: req.db(DatabaseID.sqlite))
-            .filter(\.$id >= id)
-            .sort(\.$id)
-            .all()
+                .query(on: req.db(DatabaseID.sqlite))
+                .filter(\.$id >= id)
+                .sort(\.$id)
+                .all()
+        }
          
         
     }

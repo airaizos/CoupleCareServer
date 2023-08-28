@@ -1,0 +1,87 @@
+[
+    {
+        "id": 1,
+        "instructions": "Hazle un cumplido sobre cómo se ha vestido",
+    "tags": [
+        {
+            "id":1,
+            "name":"Dinero"
+        },
+        {
+            "id":2,
+            "name":"Exterior"
+        }
+    ]
+    },
+    {
+        "id": 2,
+        "instructions": "Escribe 3 motivos por los que estás con tu pareja",
+        
+        "tags": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+        },
+    {
+        "id": 3,
+        "instructions": "Hazle un cumplido sobre la comida que ha preparado",
+        "tags": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+        },
+    {
+        "id": 4,
+        "instructions": "Dale un masaje en los brazos mientras veis las tv",
+        "tagss": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "instructions": "Hazte una foto y envíasela",
+        "tags": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "instructions": "Cuéntale como recuerdas que la conociste",
+        "tags": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+    }
+]
