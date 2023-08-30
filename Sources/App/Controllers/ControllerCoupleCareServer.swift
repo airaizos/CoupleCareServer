@@ -25,7 +25,7 @@ struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
         api.get("quotes", use: getQuotes)
         
         let latest = api.grouped("latest")
-        
+        latest.get("quotes",":id",use: getLatestQuotes)
         latest.get("categories",":id", use: getLatestCategories)
         latest.get("tags",":id", use: getLatestTags)
         latest.get("activities",":id", use: getLatestActivities)
@@ -118,6 +118,18 @@ struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
     
     //MARK: - Filtered Values
     
+    func getLatestQuotes(req:Request) async throws -> [Quote] {
+        guard let id = req.parameters.get("id", as: Int.self), id > 0  else {
+            throw Abort(.badRequest)
+        }
+        
+        return try await Quote
+            .query(on: req.db(DatabaseID.sqlite))
+            .filter(\.$id >= id)
+            .sort(\.$id)
+            .all()
+    }
+    
     func getLatestCategories(req:Request) async throws -> [Category] {
         guard let id = req.parameters.get("id", as: Int.self), id > 0  else {
             throw Abort(.badRequest)
@@ -142,17 +154,6 @@ struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
             .all()
     }
     
-    func getLatestQuotes(req:Request) async throws -> [Quote] {
-        guard let id = req.parameters.get("id", as: Int.self), id > 0  else {
-            throw Abort(.badRequest)
-        }
-        
-        return try await Quote
-            .query(on: req.db(DatabaseID.sqlite))
-            .filter(\.$id >= id)
-            .sort(\.$id)
-            .all()
-    }
     func getLatestActivities(req:Request) async throws -> [Activity] {
         guard let id = req.parameters.get("id", as: Int.self), id > 0  else {
             throw Abort(.badRequest)

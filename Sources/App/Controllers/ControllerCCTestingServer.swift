@@ -30,6 +30,7 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         
         let latest = api.grouped("latest")
         latest.get("activities",":id", use: getLatestActivities)
+        latest.get("quotes",":id", use: getLatestQuotes)
  
     }
     
@@ -98,7 +99,7 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         
         if id < 0 {
             let activities =  try await getContentFrom(file: "Activities.json", type: [Activity].self)
-            return activities.filter { ($0.id ?? 0) >= id }
+            return activities.filter { ($0.id ?? 0) >= -id }
         } else {
             return try await Activity
                 .query(on: req.db(DatabaseID.sqlite))
@@ -106,8 +107,24 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
                 .sort(\.$id)
                 .all()
         }
-         
+    }
+    
+    func getLatestQuotes(req: Vapor.Request) async throws -> [Quote] {
+        guard let id = req.parameters.get("id", as: Int.self) else {
+            throw Abort(.badRequest)
+        }
         
+        if id < 0 {
+            let quotes =  try await getContentFrom(file: "Quotes.json", type: [Quote].self)
+            return quotes.filter { ($0.id ?? 0) >= -id  }
+        } else {
+            return try await Quote
+                .query(on: req.db(DatabaseID.sqlite))
+                .filter(\.$id >= id)
+                .sort(\.$id)
+                .all()
+        }
+
     }
    
     
