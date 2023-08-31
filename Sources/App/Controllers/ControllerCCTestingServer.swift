@@ -31,6 +31,9 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         let latest = api.grouped("latest")
         latest.get("activities",":id", use: getLatestActivities)
         latest.get("quotes",":id", use: getLatestQuotes)
+        latest.get("categories",":id", use: getLatestCategories)
+        latest.get("dailies",":id", use: getLatestDailies)
+        latest.get("tags", ":id", use: getLatestTags)
  
     }
     
@@ -91,6 +94,24 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
     
     //MARK: Registros filtrados
     
+    
+    func getLatestTags(req: Vapor.Request) async throws -> [Tag] {
+        guard let id = req.parameters.get("id", as: Int.self) else {
+            throw Abort(.badRequest)
+        }
+        
+        if id < 0 {
+            let tags =  try await getContentFrom(file: "Tags.json", type: [Tag].self)
+            return tags.filter { ($0.id ?? 0) >= -id  }
+        } else {
+            return try await Tag
+                .query(on: req.db(DatabaseID.testingDB))
+                .filter(\.$id >= id)
+                .sort(\.$id)
+                .all()
+        }
+    }
+    
     func getLatestActivities(req: Vapor.Request) async throws -> [Activity] {
      
         guard let id = req.parameters.get("id", as: Int.self) else {
@@ -102,7 +123,7 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
             return activities.filter { ($0.id ?? 0) >= -id }
         } else {
             return try await Activity
-                .query(on: req.db(DatabaseID.sqlite))
+                .query(on: req.db(DatabaseID.testingDB))
                 .filter(\.$id >= id)
                 .sort(\.$id)
                 .all()
@@ -119,16 +140,47 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
             return quotes.filter { ($0.id ?? 0) >= -id  }
         } else {
             return try await Quote
-                .query(on: req.db(DatabaseID.sqlite))
+                .query(on: req.db(DatabaseID.testingDB))
                 .filter(\.$id >= id)
                 .sort(\.$id)
                 .all()
         }
-
     }
-   
     
-  
+    func getLatestCategories(req: Vapor.Request) async throws -> [Category] {
+        guard let id = req.parameters.get("id", as: Int.self) else {
+            throw Abort(.badRequest)
+        }
+        
+        if id < 0 {
+            let categories =  try await getContentFrom(file: "Categories.json", type: [Category].self)
+            return categories.filter { ($0.id ?? 0) >= -id  }
+        } else {
+            return try await Category
+                .query(on: req.db(DatabaseID.testingDB))
+                .filter(\.$id >= id)
+                .sort(\.$id)
+                .all()
+        }
+    }
+    
+    func getLatestDailies(req: Vapor.Request) async throws -> [Daily] {
+        guard let id = req.parameters.get("id", as: Int.self) else {
+            throw Abort(.badRequest)
+        }
+        
+        if id < 0 {
+            let dailies =  try await getContentFrom(file: "Dailies.json", type: [Daily].self)
+            return dailies.filter { ($0.id ?? 0) >= -id  }
+        } else {
+            return try await Daily
+                .query(on: req.db(DatabaseID.testingDB))
+                .filter(\.$id >= id)
+                .sort(\.$id)
+                .all()
+        }
+    }
+    
     
 }
 

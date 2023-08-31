@@ -13,5 +13,5 @@ let activityTag = "activityTag"
 let tag = "tag"
 let daily = "daily"
 let dailyTag = "dailyTag"
-let dataSourceVersion = "dataSourceVerson"
+let dataSourceVersion = "dataSourceVerson" //FIXME: Error ortográfico
 let quotes = "quote"
