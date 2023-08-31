@@ -32,6 +32,8 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         latest.get("activities",":id", use: getLatestActivities)
         latest.get("quotes",":id", use: getLatestQuotes)
         latest.get("categories",":id", use: getLatestCategories)
+        
+        
         latest.get("dailies",":id", use: getLatestDailies)
         latest.get("tags", ":id", use: getLatestTags)
  
@@ -126,6 +128,8 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
                 .query(on: req.db(DatabaseID.testingDB))
                 .filter(\.$id >= id)
                 .sort(\.$id)
+                .with(\.$tags)
+                .with(\.$categoryId)
                 .all()
         }
     }
@@ -177,6 +181,7 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
                 .query(on: req.db(DatabaseID.testingDB))
                 .filter(\.$id >= id)
                 .sort(\.$id)
+                .with(\.$tags)
                 .all()
         }
     }
