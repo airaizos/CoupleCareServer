@@ -10,7 +10,7 @@ import Fluent
 
 
 
-struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
+struct ControllerCCTestingServer: RouteCollection {
     let queryDb = CCQueryDB(dbName: DatabaseID.testingDB)
     
     
@@ -18,26 +18,32 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         let api = routes.grouped("testing")
         
         api.get("currentversion", use: currentVersion)
-        api.get("categories", use: getCategories)
-        api.get("tags",use: getTags)
-        api.get("activities", use: getActivities)
-        api.get("activitiesdetail", use: getActivitiesDetail)
-        api.get("activitytags", use: getActivityTags)
-        api.get("dailies", use: getDailies)
-        api.get("dailiesdetail", use: getDailiesDetail)
-        api.get("dailytags", use: getDailyTags)
-        api.get("quotes", use: getQuotes)
+        
+        api.get("categories", use: queryDb.getCategories)
+        api.get("tags",use: queryDb.getTags)
+        api.get("quotes", use: queryDb.getQuotes)
+        api.get("activities", use: queryDb.getActivities)
+        api.get("activitiesdetail", use: queryDb.getActivitiesDetail)
+        api.get("activitytags", use: queryDb.getActivityTags)
+        api.get("dailies", use: queryDb.getDailies)
+        api.get("dailiesdetail", use: queryDb.getDailiesDetail)
+        api.get("dailytags", use: queryDb.getDailyTags)
+    
         api.get("image", use:getImage)
         
         
         let latest = api.grouped("latest")
-        latest.get("activities",":id", use: getLatestActivities)
-        latest.get("quotes",":id", use: getLatestQuotes)
-        latest.get("categories",":id", use: getLatestCategories)
+        latest.get("quotes",":id", use: queryDb.getLatestQuotes)
+        latest.get("categories",":id", use: queryDb.getLatestCategories)
+        latest.get("tags",":id", use: queryDb.getLatestTags)
         
-        
-        latest.get("dailies",":id", use: getLatestDailies)
-        latest.get("tags", ":id", use: getLatestTags)
+        latest.get("activities",":id", use: queryDb.getLatestActivities)
+        latest.get("quotes",":id", use: queryDb.getLatestQuotes)
+        latest.get("activitytags",":id", use: queryDb.getLatestActivityTags)
+      
+        latest.get("dailies",":id", use: queryDb.getLatestDailies)
+        latest.get("dailiesdetail",":id", use: queryDb.getLatestDailyDetail)
+        latest.get("dailytags",":id",use: queryDb.getLatestDailyTags)
  
         let random = api.grouped("random")
         random.get("daily",use: queryDb.getRandomDaily)
@@ -51,45 +57,45 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         return content
     }
     
-    //MARK: Testing GetURSL
+    //MARK: Testing GetURL Jsons
     
     func currentVersion(req:Request) async throws -> Double {
         99.9
     }
     
-    func getCategories(req: Vapor.Request) async throws -> [Category] {
+    func getCategoriesJson(req: Vapor.Request) async throws -> [Category] {
         try await getContentFrom(file: "Categories.json", type: [Category].self)
     }
     
-    func getTags(req: Vapor.Request) async throws -> [Tag] {
+    func getTagsJson(req: Vapor.Request) async throws -> [Tag] {
         try await getContentFrom(file: "Tags.json", type: [Tag].self)
     }
     
-    func getQuotes(req: Vapor.Request) async throws -> [Quote] {
+    func getQuotesJson(req: Vapor.Request) async throws -> [Quote] {
         try await getContentFrom(file: "Quotes.json", type: [Quote].self)
     }
     
-    func getActivities(req: Vapor.Request) async throws -> [Activity] {
+    func getActivitiesJson(req: Vapor.Request) async throws -> [Activity] {
         try await getContentFrom(file: "Activities.json", type: [Activity].self)
     }
     
-    func getActivitiesDetail(req: Vapor.Request) async throws -> [Activity] {
+    func getActivitiesDetailJson(req: Vapor.Request) async throws -> [Activity] {
         try await getContentFrom(file: "Activities.json", type: [Activity].self)
     }
     
-    func getActivityTags(req: Vapor.Request) async throws -> [ActivityTag] {
+    func getActivityTagsJson(req: Vapor.Request) async throws -> [ActivityTag] {
         try await getContentFrom(file: "ActivityTags.json", type: [ActivityTag].self)
     }
     
-    func getDailies(req: Vapor.Request) async throws -> [Daily] {
+    func getDailiesJson(req: Vapor.Request) async throws -> [Daily] {
         try await getContentFrom(file: "Dailies.json", type: [Daily].self)
     }
     
-    func getDailiesDetail(req: Vapor.Request) async throws -> [Daily] {
+    func getDailiesDetailJson(req: Vapor.Request) async throws -> [Daily] {
         try await getContentFrom(file: "Dailiesdetail.json", type: [Daily].self)
     }
     
-    func getDailyTags(req: Vapor.Request) async throws -> [DailyTag] {
+    func getDailyTagsJson(req: Vapor.Request) async throws -> [DailyTag] {
         try await getContentFrom(file: "DailyTags.json", type: [DailyTag].self)
     }
     
@@ -100,95 +106,6 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
     
     //MARK: Registros filtrados
     
-    
-    func getLatestTags(req: Vapor.Request) async throws -> [Tag] {
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        
-        if id < 0 {
-            let tags =  try await getContentFrom(file: "Tags.json", type: [Tag].self)
-            return tags.filter { ($0.id ?? 0) >= -id  }
-        } else {
-            return try await Tag
-                .query(on: req.db(DatabaseID.testingDB))
-                .filter(\.$id >= id)
-                .sort(\.$id)
-                .all()
-        }
-    }
-    
-    func getLatestActivities(req: Vapor.Request) async throws -> [Activity] {
-     
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        
-        if id < 0 {
-            let activities =  try await getContentFrom(file: "Activities.json", type: [Activity].self)
-            return activities.filter { ($0.id ?? 0) >= -id }
-        } else {
-            return try await Activity
-                .query(on: req.db(DatabaseID.testingDB))
-                .filter(\.$id >= id)
-                .sort(\.$id)
-                .with(\.$tags)
-                .with(\.$categoryId)
-                .all()
-        }
-    }
-    
-    func getLatestQuotes(req: Vapor.Request) async throws -> [Quote] {
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        
-        if id < 0 {
-            let quotes =  try await getContentFrom(file: "Quotes.json", type: [Quote].self)
-            return quotes.filter { ($0.id ?? 0) >= -id  }
-        } else {
-            return try await Quote
-                .query(on: req.db(DatabaseID.testingDB))
-                .filter(\.$id >= id)
-                .sort(\.$id)
-                .all()
-        }
-    }
-    
-    func getLatestCategories(req: Vapor.Request) async throws -> [Category] {
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        
-        if id < 0 {
-            let categories =  try await getContentFrom(file: "Categories.json", type: [Category].self)
-            return categories.filter { ($0.id ?? 0) >= -id  }
-        } else {
-            return try await Category
-                .query(on: req.db(DatabaseID.testingDB))
-                .filter(\.$id >= id)
-                .sort(\.$id)
-                .all()
-        }
-    }
-    
-    func getLatestDailies(req: Vapor.Request) async throws -> [Daily] {
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        
-        if id < 0 {
-            let dailies =  try await getContentFrom(file: "Dailies.json", type: [Daily].self)
-            return dailies.filter { ($0.id ?? 0) >= -id  }
-        } else {
-            return try await Daily
-                .query(on: req.db(DatabaseID.testingDB))
-                .filter(\.$id >= id)
-                .sort(\.$id)
-                .with(\.$tags)
-                .all()
-        }
-    }
     
     
 }
