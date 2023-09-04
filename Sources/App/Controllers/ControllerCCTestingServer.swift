@@ -11,45 +11,15 @@ import Fluent
 
 
 struct ControllerCCTestingServer: RouteCollection {
-    let queryDb = CCQueryDB(dbName: DatabaseID.testingDB)
+    let queryDb = CCQueryDB(dbName: DatabaseID.testingDB, apiGroup: "testing")
     
     
     func boot(routes: RoutesBuilder) throws {
-        let api = routes.grouped("testing")
-        
-        api.get("currentversion", use: currentVersion)
-        
-        api.get("categories", use: queryDb.getCategories)
-        api.get("tags",use: queryDb.getTags)
-        api.get("quotes", use: queryDb.getQuotes)
-        api.get("activities", use: queryDb.getActivities)
-        api.get("activitiesdetail", use: queryDb.getActivitiesDetail)
-        api.get("activitytags", use: queryDb.getActivityTags)
-        api.get("dailies", use: queryDb.getDailies)
-        api.get("dailiesdetail", use: queryDb.getDailiesDetail)
-        api.get("dailytags", use: queryDb.getDailyTags)
-    
-        api.get("image", use:getImage)
-        
-        
-        let latest = api.grouped("latest")
-        latest.get("quotes",":id", use: queryDb.getLatestQuotes)
-        latest.get("categories",":id", use: queryDb.getLatestCategories)
-        latest.get("tags",":id", use: queryDb.getLatestTags)
-        
-        latest.get("activities",":id", use: queryDb.getLatestActivities)
-        latest.get("quotes",":id", use: queryDb.getLatestQuotes)
-        latest.get("activitytags",":id", use: queryDb.getLatestActivityTags)
       
-        latest.get("dailies",":id", use: queryDb.getLatestDailies)
-        latest.get("dailiesdetail",":id", use: queryDb.getLatestDailyDetail)
-        latest.get("dailytags",":id",use: queryDb.getLatestDailyTags)
- 
-        let random = api.grouped("random")
-        random.get("daily",use: queryDb.getRandomDaily)
+        try queryDb.boot(api: queryDb.apiGroup, routes: routes)
     }
     
-    //MARK - Métodos Compartidos
+    //MARK - Métodos solo de testing
     func getContentFrom<T:Content>(file: String, type: T.Type) async throws -> T {
         let path = URL(string: "http://127.0.0.1:8080/\(file)")!
         let data = try Data(contentsOf: path, options: .alwaysMapped)
