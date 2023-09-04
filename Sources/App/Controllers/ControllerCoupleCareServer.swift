@@ -10,6 +10,8 @@ import Fluent
 
 
 struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
+    let queryDb = CCQueryDB(dbName: DatabaseID.sqlite)
+    
     func boot(routes: RoutesBuilder) throws {
         let api = routes.grouped("couplecare")
         
@@ -34,6 +36,10 @@ struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
         latest.get("dailies",":id",use: getLatestDailies)
         latest.get("dailiesdetail",":id", use: getLatestDailyDetail)
         latest.get("dailytags",":id",use: getLatestDailyTags)
+        
+        
+        let random = api.grouped("random")
+        random.get("daily",use: queryDb.getRandomDaily)
     }
     
     //MARK: - General
@@ -227,4 +233,6 @@ struct ControllerCoupleCareServer: RouteCollection,ControllerCCEndPoints {
             .with(\.$tag)
             .all()
     }
+    
+    
 }

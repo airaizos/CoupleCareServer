@@ -8,8 +8,6 @@
 import Vapor
 import Fluent
 
-
-
 protocol ControllerCCEndPoints {
     func currentVersion(req: Request) async throws -> Double
     func getCategories(req:Request) async throws -> [Category]

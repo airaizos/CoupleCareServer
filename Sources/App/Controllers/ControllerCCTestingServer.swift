@@ -11,7 +11,9 @@ import Fluent
 
 
 struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
-
+    let queryDb = CCQueryDB(dbName: DatabaseID.testingDB)
+    
+    
     func boot(routes: RoutesBuilder) throws {
         let api = routes.grouped("testing")
         
@@ -37,6 +39,8 @@ struct ControllerCCTestingServer: RouteCollection, ControllerCCEndPoints {
         latest.get("dailies",":id", use: getLatestDailies)
         latest.get("tags", ":id", use: getLatestTags)
  
+        let random = api.grouped("random")
+        random.get("daily",use: queryDb.getRandomDaily)
     }
     
     //MARK - Métodos Compartidos
