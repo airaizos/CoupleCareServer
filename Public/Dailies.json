@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "instructions": "Hazle un cumplido sobre cómo se ha vestido",
+    },
+    {
+        "id": 2,
+        "instructions": "Escribe 3 motivos por los que estás con tu pareja",
+        },
+    {
+        "id": 3,
+        "instructions": "Hazle un cumplido sobre la comida que ha preparado",
+        },
+    {
+        "id": 4,
+        "instructions": "Dale un masaje en los brazos mientras veis las tv",
+    },
+    {
+        "id": 5,
+        "instructions": "Hazte una foto y envíasela",
+    },
+    {
+        "id": 6,
+        "instructions": "Cuéntale como recuerdas que la conociste",
+    }
+]

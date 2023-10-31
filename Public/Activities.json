@@ -1,0 +1,49 @@
+[
+    {
+        "categoryId":
+        {
+            "id":1,
+            "name":"Aprendizaje"
+        },
+        
+        "hint": "Unidos ante todos",
+        "id": 1,
+        "instructions": "Entre los dos ir poner un candado en un puente",
+        "price": 5,
+        "maxReward": 3,
+        "tags": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+    },
+    {
+        "categoryId":
+        {
+            "id":1,
+            "name":"Aprendizaje"
+        },
+        
+        "hint": "Unidos ante todos",
+        "id": 100,
+        "instructions": "Entre los dos ir poner un candado en un puente",
+        "price": 5,
+        "maxReward": 3,
+        "tags": [
+            {
+                "id":1,
+                "name":"Dinero"
+            },
+            {
+                "id":2,
+                "name":"Exterior"
+            }
+        ]
+    }
+]
+ 

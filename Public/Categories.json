@@ -1,0 +1,26 @@
+[
+  {
+     "id": 1,
+      "name":"Aprendizaje"
+   },
+  {
+     "id": 2,
+      "name":"Bienestar"
+   },
+  {
+     "id": 3,
+      "name":"Creativa"
+   },
+  {
+     "id": 4,
+      "name":"Exploración"
+   },
+  {
+       "id": 5,
+        "name":"Recuerdos"
+     },
+    {
+       "id": 6,
+        "name":"Relajación"
+     }
+]

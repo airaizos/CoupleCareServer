@@ -253,6 +253,7 @@ struct CCQueryDB  {
             if let daily = try await Daily
                 .query(on: req.db(dbName))
                 .filter(\.$id == randomId)
+                .with(\.$tags)
                 .first() {
                 return daily
             } else {
