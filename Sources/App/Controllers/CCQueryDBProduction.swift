@@ -47,6 +47,11 @@ struct CCQueryDB  {
             
             let random = api.grouped("random")
             random.get("daily",use: getRandomDaily)
+        
+        
+        // POST
+        api.post("suggested", use: postSuggestedAction)
+        
         }
     
     //MARK: - General
@@ -262,7 +267,12 @@ struct CCQueryDB  {
         }
     }
     
-    
+    //MARK: POST
+    func postSuggestedAction(req: Request) async throws -> String {
+        let decoder = JSONDecoder()
+        let suggestion = try req.content.decode(SuggestedAction.self, using: decoder)
+        return "Tu sugerencia ha sido recibida correctamente \(suggestion.instructions)"
+    }
 
    
         

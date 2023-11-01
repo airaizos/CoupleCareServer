@@ -74,10 +74,8 @@ struct ControllerCCTestingServer: RouteCollection {
     }
     
     //MARK: POST
-    func postSuggestedAction(req: Request) throws -> String {
-        let decoder = JSONDecoder()
-        let suggestion = try req.content.decode(SuggestedAction.self, using: decoder)
-        return "Tu sugerencia ha sido recibida correctamente: \(suggestion.id?.uuidString ?? "id")"
+    func postSuggestedAction(req: Request) async throws -> String {
+      "Tu sugerencia ha sido recibida correctamente"
     }
 }
 
