@@ -23,3 +23,12 @@ final class SuggestedTag: Model, Content {
     }
     
 }
+
+extension SuggestedTag {
+    static func newSuggestedTag(_ item: SuggestedAction.Create) -> [SuggestedTag] {
+       item.tags.map { tag in
+            SuggestedTag(id: tag.id, name: tag.name)
+        }
+    }
+    
+}

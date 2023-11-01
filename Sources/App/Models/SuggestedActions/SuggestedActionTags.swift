@@ -23,3 +23,17 @@ final class SuggestedActionTags: Model, Content {
         self.$actionTag.id =  try tag.requireID()
     }
 }
+
+
+extension SuggestedActionTags {
+    static func newActionTag(_ item: SuggestedAction) throws -> [SuggestedActionTags]  {
+        
+        try item.tags.compactMap { tag in
+             try SuggestedActionTags(action: item, tag: tag)
+            
+        }
+        
+        
+    }
+    
+}

@@ -22,17 +22,44 @@ final class SuggestedAction: Model, Content {
     
     init() {}
     
-    init(id: UUID? = nil, hint: String? = nil, instructions: String = "", maxReward: Int? = nil, price: Int? = nil, category: Category) {
+    init(id: UUID? = nil, hint: String? = nil, instructions: String = "", maxReward: Int? = nil, price: Int? = nil, category: Int) {
         self.id = id
         self.hint = hint
         self.instructions = instructions
         self.maxReward = maxReward
         self.price = price
-        self.category = category
+        self.$category.id = category
+    }
+}
+
+extension SuggestedAction {
+    
+    struct Create: Content, Validatable {
+
+        var hint: String?
+        var instructions: String
+        var maxReward: Int?
+        var price: Int?
+        var category: Int?
+        var tags: [SuggestedTag]
+    
+       static func validations(_ validations: inout Validations) {
+         
+            validations.add("instructions", as: String.self, is: !.empty)
+        }
     }
 }
 
 
-
+extension SuggestedAction {
+    static func newSuggestedAction(_ item: SuggestedAction.Create) -> SuggestedAction {
+       SuggestedAction(id: UUID(),
+                               hint: item.hint ?? "",
+                               instructions: item.instructions,
+                               maxReward: item.maxReward ?? 0 ,
+                               price: item.price ?? 0,
+                               category: item.category ?? 1)
+    }
+}
 
 
