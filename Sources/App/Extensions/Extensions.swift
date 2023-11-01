@@ -15,3 +15,8 @@ let daily = "daily"
 let dailyTag = "dailyTag"
 let dataSourceVersion = "dataSourceVerson" //FIXME: Error ortográfico
 let quotes = "quote"
+
+let suggestedAction = "suggestedAction"
+let suggestedActionTags = "suggestedActionTag"
+
+let suggestedTag = "suggestedTag"

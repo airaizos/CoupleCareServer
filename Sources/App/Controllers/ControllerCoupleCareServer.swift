@@ -15,6 +15,4 @@ struct ControllerCoupleCareServer: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         try queryDb.boot(api: queryDb.apiGroup, routes: routes)
     }
-    
-    
 }

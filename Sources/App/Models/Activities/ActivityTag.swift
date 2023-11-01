@@ -16,7 +16,6 @@ final class ActivityTag: Model, Content {
     @Parent(key: "activity_id") var activity: Activity
     @Parent(key: "tag_id") var tag: Tag
 
-    
     init() {}
     
     init(id: Int? = nil, activity:Activity, tag: Tag) throws {
@@ -24,7 +23,4 @@ final class ActivityTag: Model, Content {
         self.$activity.id = try activity.requireID()
         self.$tag.id = try tag.requireID()
     }
-    
-    
-    
 }

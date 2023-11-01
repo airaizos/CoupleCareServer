@@ -73,11 +73,12 @@ struct ControllerCCTestingServer: RouteCollection {
         return try await req.view.render("image", ["image":"http://127.0.0.1:8080/image.png"])
     }
     
-    
-    //MARK: Registros filtrados
-    
-    
-    
+    //MARK: POST
+    func postSuggestedAction(req: Request) throws -> String {
+        let decoder = JSONDecoder()
+        let suggestion = try req.content.decode(SuggestedAction.self, using: decoder)
+        return "Tu sugerencia ha sido recibida correctamente: \(suggestion.id?.uuidString ?? "id")"
+    }
 }
 
 
