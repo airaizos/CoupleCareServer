@@ -25,15 +25,3 @@ final class SuggestedActionTags: Model, Content {
 }
 
 
-extension SuggestedActionTags {
-    static func newActionTag(_ item: SuggestedAction) throws -> [SuggestedActionTags]  {
-        
-        try item.tags.compactMap { tag in
-             try SuggestedActionTags(action: item, tag: tag)
-            
-        }
-        
-        
-    }
-    
-}

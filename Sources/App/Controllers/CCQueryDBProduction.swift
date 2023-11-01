@@ -279,30 +279,8 @@ struct CCQueryDB  {
         
         let newSuggestion = SuggestedAction.newSuggestedAction(suggestion)
         
-        //tenemos que crear las otras dos tablas??
-        
-        //ERROR constraint: FOREIGN KEY constraint failed
+        try await newSuggestion.save(on: req.db(dbName))
        
-        
-        //Suggested Tag
-        let newTags = SuggestedTag.newSuggestedTag(suggestion)
-        
-       
-        
-        let newActionTag = try SuggestedActionTags.newActionTag(newSuggestion)
-        
-        
-        
-        for actionTag in newActionTag {
-            try await actionTag.save(on: req.db)
-        }
-        
-        try await newSuggestion.save(on: req.db)
-        
-        for newTag in newTags {
-            try await newTag.save(on: req.db)
-        }
-        
         return "Tu sugerencia ha sido recibida correctamente \(suggestion.instructions)"
     }
 

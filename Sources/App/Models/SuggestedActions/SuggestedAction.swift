@@ -16,19 +16,18 @@ final class SuggestedAction: Model, Content {
     @Field(key: "instructions") var instructions: String
     @Field(key: "maxReward") var maxReward: Int?
     @Field(key: "price") var price: Int?
-    @Parent(key: "category") var category: Category
-
-    @Siblings(through: SuggestedActionTags.self, from: \.$suggestedAction, to: \.$actionTag) public var tags: [SuggestedTag]
-    
+    @Field(key: "category") var category: String?
+    @Field(key: "tags") var tags: String?
     init() {}
     
-    init(id: UUID? = nil, hint: String? = nil, instructions: String = "", maxReward: Int? = nil, price: Int? = nil, category: Int) {
+    init(id: UUID? = nil, hint: String? = nil, instructions: String = "", maxReward: Int? = nil, price: Int? = nil, category: String = "", tags: String = "" ) {
         self.id = id
         self.hint = hint
         self.instructions = instructions
         self.maxReward = maxReward
         self.price = price
-        self.$category.id = category
+        self.category = category
+        self.tags = tags
     }
 }
 
@@ -40,8 +39,8 @@ extension SuggestedAction {
         var instructions: String
         var maxReward: Int?
         var price: Int?
-        var category: Int?
-        var tags: [SuggestedTag]
+        var category: String?
+        var tags: String?
     
        static func validations(_ validations: inout Validations) {
          
@@ -58,7 +57,8 @@ extension SuggestedAction {
                                instructions: item.instructions,
                                maxReward: item.maxReward ?? 0 ,
                                price: item.price ?? 0,
-                               category: item.category ?? 1)
+                                category: item.category ?? "",
+                                tags: item.tags ?? "")
     }
 }
 

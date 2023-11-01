@@ -75,7 +75,19 @@ struct ControllerCCTestingServer: RouteCollection {
     
     //MARK: POST
     func postSuggestedAction(req: Request) async throws -> String {
-      "Tu sugerencia ha sido recibida correctamente"
+      try SuggestedAction.Create.validate(content: req)
+        
+        let suggestion: SuggestedAction.Create = try req.content.decode(SuggestedAction.Create.self)
+        
+        guard !suggestion.instructions.isEmpty else {
+            throw Abort(.badRequest, reason: "Sin instrucciones")
+        }
+        
+        let newSuggestion = SuggestedAction.newSuggestedAction(suggestion)
+        
+        try await newSuggestion.save(on: req.db)
+       
+        return "Tu sugerencia ha sido recibida correctamente \(suggestion.instructions)"
     }
 }
 

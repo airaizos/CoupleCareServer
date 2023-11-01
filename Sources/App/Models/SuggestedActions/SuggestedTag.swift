@@ -21,14 +21,4 @@ final class SuggestedTag: Model, Content {
         self.id = id
         self.name = name
     }
-    
-}
-
-extension SuggestedTag {
-    static func newSuggestedTag(_ item: SuggestedAction.Create) -> [SuggestedTag] {
-       item.tags.map { tag in
-            SuggestedTag(id: tag.id, name: tag.name)
-        }
-    }
-    
 }

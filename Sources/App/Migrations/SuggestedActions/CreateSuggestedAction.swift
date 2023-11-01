@@ -16,7 +16,8 @@ struct CreateSuggestedAction: AsyncMigration {
             .field("instructions", .string)
             .field("maxReward", .int)
             .field("price", .int)
-            .field("category", .int, .references(Category.schema, "id"))
+            .field("category", .string)
+            .field("tags", .string)
             .create()
     }
     

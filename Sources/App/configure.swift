@@ -24,8 +24,6 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateDailyTag())
     
     app.migrations.add(CreateSuggestedAction())
-    app.migrations.add(CreateSuggestedTag())
-    app.migrations.add(CreateSuggestedActionTags())
 
     //Testing Endpoint
     app.databases.use(.sqlite(.file("testingDB.sqlite")), as: .testingDB)
@@ -42,9 +40,6 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateDailyTag(), to: .testingDB)
     
     app.migrations.add(CreateSuggestedAction(), to: .testingDB)
-    app.migrations.add(CreateSuggestedTag(), to: .testingDB)
-    app.migrations.add(CreateSuggestedActionTags(), to: .testingDB)
-    
     
     app.views.use(.leaf)
 
