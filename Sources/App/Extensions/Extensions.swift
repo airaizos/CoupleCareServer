@@ -7,6 +7,9 @@
 
 import Foundation
 
+
+let users = "users"
+let userToken = "userToken"
 let category = "category"
 let activity = "activity"
 let activityTag = "activityTag"

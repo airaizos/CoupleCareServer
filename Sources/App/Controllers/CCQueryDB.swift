@@ -283,9 +283,4 @@ struct CCQueryDB  {
        
         return "Tu sugerencia ha sido recibida correctamente \(suggestion.instructions)"
     }
-
-   
-        
-        
-    
 }

@@ -15,8 +15,26 @@ struct ControllerCCTestingServer: RouteCollection {
     
     
     func boot(routes: RoutesBuilder) throws {
-      
         try queryDb.boot(api: queryDb.apiGroup, routes: routes)
+        
+        let tokenAuth = routes.grouped(UserToken.authenticator())
+        
+        let testing = tokenAuth.grouped("\(queryDb.apiGroup)")
+        let fixed = testing.grouped("static")
+        
+        fixed.get("current", use: currentVersion)
+        fixed.get("categories",use: getCategoriesJson)
+        fixed.get("image",use: getImage)
+        
+        let tokenProtected = fixed.grouped(UserToken.authenticator())
+        tokenProtected.get("me", use: withToken)
+    }
+    
+    func withToken(req:Request) async throws -> HTTPStatus {
+        let user = try await getContentFrom(file: "User.json", type: User.self)
+       // let user = try req.auth.require(User.self)
+        return .ok
+        
     }
     
     //MARK - Métodos solo de testing
@@ -36,59 +54,13 @@ struct ControllerCCTestingServer: RouteCollection {
     func getCategoriesJson(req: Vapor.Request) async throws -> [Category] {
         try await getContentFrom(file: "Categories.json", type: [Category].self)
     }
-    
-    func getTagsJson(req: Vapor.Request) async throws -> [Tag] {
-        try await getContentFrom(file: "Tags.json", type: [Tag].self)
-    }
-    
-    func getQuotesJson(req: Vapor.Request) async throws -> [Quote] {
-        try await getContentFrom(file: "Quotes.json", type: [Quote].self)
-    }
-    
-    func getActivitiesJson(req: Vapor.Request) async throws -> [Activity] {
-        try await getContentFrom(file: "Activities.json", type: [Activity].self)
-    }
-    
-    func getActivitiesDetailJson(req: Vapor.Request) async throws -> [Activity] {
-        try await getContentFrom(file: "Activities.json", type: [Activity].self)
-    }
-    
-    func getActivityTagsJson(req: Vapor.Request) async throws -> [ActivityTag] {
-        try await getContentFrom(file: "ActivityTags.json", type: [ActivityTag].self)
-    }
-    
-    func getDailiesJson(req: Vapor.Request) async throws -> [Daily] {
-        try await getContentFrom(file: "Dailies.json", type: [Daily].self)
-    }
-    
-    func getDailiesDetailJson(req: Vapor.Request) async throws -> [Daily] {
-        try await getContentFrom(file: "Dailiesdetail.json", type: [Daily].self)
-    }
-    
-    func getDailyTagsJson(req: Vapor.Request) async throws -> [DailyTag] {
-        try await getContentFrom(file: "DailyTags.json", type: [DailyTag].self)
-    }
-    
+
     func getImage(req:Request) async throws -> View {
         return try await req.view.render("image", ["image":"http://127.0.0.1:8080/image.png"])
     }
+
     
-    //MARK: POST
-    func postSuggestedAction(req: Request) async throws -> String {
-      try SuggestedAction.Create.validate(content: req)
-        
-        let suggestion: SuggestedAction.Create = try req.content.decode(SuggestedAction.Create.self)
-        
-        guard !suggestion.instructions.isEmpty else {
-            throw Abort(.badRequest, reason: "Sin instrucciones")
-        }
-        
-        let newSuggestion = SuggestedAction.newSuggestedAction(suggestion)
-        
-        try await newSuggestion.save(on: req.db)
-       
-        return "Tu sugerencia ha sido recibida correctamente \(suggestion.instructions)"
-    }
+ 
 }
 
 
